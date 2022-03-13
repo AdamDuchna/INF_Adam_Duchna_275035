@@ -1,5 +1,6 @@
 import math
 import random
+import numpy
 v1=[3, 8, 9, 10, 12]
 v2=[8, 7, 7, 5, 6]
 sumV=[]
@@ -27,13 +28,24 @@ mean = sum(random_v)/50
 stdev=0
 max= max(random_v)
 min = min(random_v)
-for p in random_v:
-    stdev+=math.pow(p-mean,2)
-stdev=stdev/49
+stdev= numpy.std(random_v)
 print(max,min,mean,stdev)
 
 normal_v=[]
 for b in random_v:
-    normal_v.append(b-min/max-min)
-
+    normal_v.append((b-min)/(max-min))
 print(normal_v)
+
+std_v=[]
+for m in random_v:
+    std_v.append((m-mean)/stdev)
+print(std_v)
+print(sum(std_v)/50,numpy.std(std_v))
+
+prev_index=0
+discrete_v=[]
+random_v.sort()
+for index in random_v:
+    discrete_v.append("["+str(prev_index)+","+str(index)+")")
+    prev_index=index
+print(discrete_v)
