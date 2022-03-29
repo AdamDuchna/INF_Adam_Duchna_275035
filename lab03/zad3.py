@@ -1,53 +1,68 @@
 import pygad
-import numpy
-import math
 
 gene_space = [0, 1, 2, 3]
 Labirynt = \
-    [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-     [0, 2, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0],
-     [0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0],
-     [0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0],
-     [0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0],
-     [0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0],
-     [0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0],
-     [0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0],
-     [0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0],
-     [0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0],
-     [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 3, 0],
-     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+    [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+     [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1],
+     [1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1],
+     [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+     [1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1],
+     [1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1],
+     [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1],
+     [1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1],
+     [1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1],
+     [1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1],
+     [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
 
 def fitness_function(solution, solution_idx):
+    moveset = Labirynt
     position = [1, 1]
+    score = None
     for move in solution:
         if move == 0:
-            #LEWO
-            position[1] -= 1
+            # LEWO
+            if moveset[position[0]][position[1] - 1] == 0:
+                position[1] -= 1
+            else:
+                if score is None:
+                    score = -(abs(10 - position[0]) + abs(10 - position[1]))
         if move == 1:
-            #PRAWO
-            position[1] += 1
+            # PRAWO
+            if moveset[position[0]][position[1] + 1] == 0:
+                position[1] += 1
+            else:
+                if score is None:
+                    score = -(abs(10 - position[0]) + abs(10 - position[1]))
         if move == 2:
-            #DOL
-            position[0] += 1
+            # DOL
+            if moveset[position[0] + 1][position[1]] == 0:
+                position[0] += 1
+            else:
+                if score is None:
+                    score = -(abs(10 - position[0]) + abs(10 - position[1]))
         if move == 3:
-            #GORA
-            position[0] -= 1
+            # GORA
+            if moveset[position[0] - 1][position[1]] == 0:
+                position[0] -= 1
+            else:
+                if score is None:
+                    score = -(abs(10 - position[0]) + abs(10 - position[1]))
 
-        if Labirynt[position[0]][position[1]] == 1:
-            return -1
-            break
-    return -(11-position[0] + 11 - position[1])
+    if score is None:
+        return -(abs(10 - position[0]) + abs(10 - position[1]))
+    else:
+        return score
 
-sol_per_pop = 20
+sol_per_pop = 50
 num_genes = 30
-num_parents_mating = 10
-num_generations = 60
-keep_parents = 5
+num_parents_mating = 25
+num_generations = 300
+keep_parents = 12
 parent_selection_type = "sss"
 crossover_type = "single_point"
 mutation_type = "random"
-mutation_percent_genes = 23
-
+mutation_percent_genes = 8
 ga_instance = pygad.GA(gene_space=gene_space,
                        num_generations=num_generations,
                        num_parents_mating=num_parents_mating,
@@ -58,8 +73,8 @@ ga_instance = pygad.GA(gene_space=gene_space,
                        keep_parents=keep_parents,
                        crossover_type=crossover_type,
                        mutation_type=mutation_type,
-                       mutation_percent_genes=mutation_percent_genes
-                       )
+                       mutation_percent_genes=mutation_percent_genes,
+                       stop_criteria="reach_0")
 
 ga_instance.run()
 
