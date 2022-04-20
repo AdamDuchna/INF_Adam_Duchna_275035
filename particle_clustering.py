@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pygad
 
-gene_space = {"low": 0, "high": 2, "step": 0.03}
-particles_count = 8
+gene_space = {"low": 0, "high": 2, "step": 0.001}
+particles_count = 21
 p0 = 3
 
 
@@ -27,15 +27,14 @@ def fitness_function(solution, solution_idx):
     return -morse_sum
 
 
-sol_per_pop = 60
+sol_per_pop = 100
 num_genes = particles_count * 3
-num_parents_mating = 30
+num_parents_mating = 20
 num_generations = 1000
-keep_parents = 15
 parent_selection_type = "rank"
 crossover_type = "single_point"
 mutation_type = "random"
-mutation_num_genes = 3
+mutation_num_genes = 1
 
 ga_instance = pygad.GA(gene_space=gene_space,
                        num_generations=num_generations,
@@ -44,7 +43,6 @@ ga_instance = pygad.GA(gene_space=gene_space,
                        sol_per_pop=sol_per_pop,
                        num_genes=num_genes,
                        parent_selection_type=parent_selection_type,
-                       keep_parents=keep_parents,
                        crossover_type=crossover_type,
                        mutation_type=mutation_type,
                        mutation_num_genes=mutation_num_genes
